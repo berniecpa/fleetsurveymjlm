@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Management Peer Survey</title>
+    <style>
+        body {
+            font-family: 'Google Sans', Arial, sans-serif;
+            background-color: #f1f3f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .submit-btn {
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .submit-btn:hover {
+            background-color: #1557b0;
+        }
+        .admin-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 1px solid #dadce0;
+        }
+        .admin-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #202124;
+        }
+        .download-btn {
+            background-color: #34a853;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .download-btn:hover {
+            background-color: #2d8f47;
+        }
+        .response-count {
+            color: #5f6368;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .form-header {
+            background: #673ab7;
+            color: white;
+            padding: 24px;
+            border-radius: 8px 8px 0 0;
+        }
+        .form-title {
+            font-size: 32px;
+            font-weight: 400;
+            margin: 0 0 8px 0;
+        }
+        .form-description {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        .form-content {
+            padding: 24px;
+        }
+        .question-block {
+            margin-bottom: 32px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 24px;
+        }
+        .question-block:last-child {
+            border-bottom: none;
+        }
+        .question-title {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #202124;
+        }
+        .required {
+            color: #d93025;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 1px 3px rgba(26,115,232,0.2);
+        }
+        .radio-group {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        input[type="radio"] {
+            margin: 0;
+        }
+        .grid-container {
+            margin-top: 16px;
+        }
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .grid-table th {
+            background-color: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #dadce0;
+            font-weight: 500;
+        }
+        .grid-table td {
+            padding: 12px;
+            border: 1px solid #dadce0;
+            vertical-align: middle;
+        }
+        .grid-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .note {
+            font-size: 12px;
+            color: #5f6368;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1 class="form-title">Fleet Management Department Peer Survey</h1>
+            <div class="form-description">
+                <span id="city-specific-text">City Fleet Management Benchmarking Study</span>
+            </div>
+        </div>
+        
+        <div class="form-content">
+            <div id="success-msg" class="success-message">
+                Thank you! Your response has been recorded successfully.
+            </div>
+            <div id="error-msg" class="error-message">
+                Please fill in all required fields before submitting.
+            </div>
+            
+            <div class="instructions">
+                <strong>Objective:</strong> The Director of Fleet Management for the City of Montgomery, Alabama requested McConnell Jones' consulting team benchmark the City of Montgomery's Fleet Management operations against peer cities<span id="city-reference"></span>.
+                <br><br>
+                <strong>Instructions:</strong> Please provide the information requested below as of the end of your most recent fiscal year<span id="fy-reference"></span>. This is a short survey to collect relevant data to establish "normative" metrics for benchmark comparisons.
+            </div>
+
+            <form id="fleet-survey">
+                <div class="question-block">
+                    <div class="question-title">What is your most recent fiscal year end date? <span class="required">*</span></div>
+                    <input type="text" id="fiscal-year-input" name="fiscal_year_end" placeholder="e.g., September 30, 2024" required>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">1. Total budgeted expenditures for Fleet Management operations as of your fiscal year end <span class="required">*</span></div>
+                    <input type="text" name="total_budget" placeholder="Enter amount" required>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">2. Total Full-Time Equivalent Employees in the following labor classifications: <span class="required">*</span></div>
+                    <div class="grid-container">
+                        <table class="grid-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70%;">Labor Classification</th>
+                                    <th style="width: 30%;">FTE Employees</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Auto Technicians</td>
+                                    <td><input type="number" name="auto_technicians_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
+                                </tr>
+                                <tr>
+                                    <td>Administration (Including Director)</td>
+                                    <td><input type="number" name="admin_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
+                                </tr>
+                                <tr>
+                                    <td>Heavy Equipment Mechanics</td>
+                                    <td><input type="number" name="heavy_mechanics_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
+                                </tr>
+                                <tr>
+                                    <td>Mechanics (all other mechanics)</td>
+                                    <td><input type="number" name="other_mechanics_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
+                                </tr>
+                                <tr>
+                                    <td>All other classifications</td>
+                                    <td><input type="number" name="other_classifications_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa; font-weight: 500;">
+                                    <td><strong>Total FTE Employees for Fleet Management Operations</strong></td>
+                                    <td><input type="number" name="total_fte" id="total_fte" class="grid-input" min="0" step="0.1" readonly style="background-color: #f8f9fa;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">3. Total vehicle inventory serviced by Fleet Management as of your fiscal year end: <span class="required">*</span></div>
+                    <div class="grid-container">
+                        <table class="grid-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70%;">Type of Vehicle</th>
+                                    <th style="width: 30%;">Vehicle Inventory</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Heavy Trucks (i.e., landfill, sanitization, dump trucks, fire trucks, etc.)</td>
+                                    <td><input type="number" name="heavy_trucks" class="grid-input vehicle-input" min="0" required></td>
+                                </tr>
+                                <tr>
+                                    <td>Auto Light (i.e., light trucks, sedans, vans, etc.)</td>
+                                    <td><input type="number" name="auto_light" class="grid-input vehicle-input" min="0" required></td>
+                                </tr>
+                                <tr>
+                                    <td>All other vehicles and motorized equipment</td>
+                                    <td><input type="number" name="other_vehicles" class="grid-input vehicle-input" min="0" required></td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa; font-weight: 500;">
+                                    <td><strong>Total Vehicle Inventory</strong></td>
+                                    <td><input type="number" name="total_vehicles" id="total_vehicles" class="grid-input" min="0" readonly style="background-color: #f8f9fa;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Response</button>
+            </form>
+        </div>
+        
+        <!-- Admin Section -->
+        <div class="admin-section" id="admin-section" style="display: none;">
+            <div class="admin-title">Survey Administration</div>
+            <button onclick="downloadCSV()" class="download-btn">Download Responses (CSV)</button>
+            <button onclick="downloadJSON()" class="download-btn">Download Responses (JSON)</button>
+            <button onclick="clearResponses()" class="download-btn" style="background-color: #ea4335;">Clear All Responses</button>
+            <div id="response-count" class="response-count">0 responses collected</div>
+        </div>
+        
+        <!-- Admin Access (hidden from survey takers) -->
+        <div style="text-align: center; margin-top: 20px; color: #5f6368; font-size: 12px;">
+            <span onclick="showAdminAccess()" style="cursor: pointer; user-select: none;">•</span>
+        </div>
+        
+        <!-- Admin Access Modal -->
+        <div id="admin-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; text-align: center;">
+                <h3 style="margin-top: 0;">Admin Access</h3>
+                <input type="password" id="admin-password" placeholder="Enter access code" style="padding: 10px; margin: 10px; border: 1px solid #dadce0; border-radius: 4px;">
+                <br>
+                <button onclick="checkAdminAccess()" style="background: #1a73e8; color: white; padding: 10px 20px; border: none; border-radius: 4px; margin: 5px;">Access</button>
+                <button onclick="hideAdminAccess()" style="background: #5f6368; color: white; padding: 10px 20px; border: none; border-radius: 4px; margin: 5px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store survey responses in memory
+        let surveyResponses = [];
+
+        // Get URL parameters and customize form
+        function initializeForm() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cityName = urlParams.get('city');
+            const fiscalYear = urlParams.get('fy');
+
+            // Customize header if city is provided
+            if (cityName) {
+                const citySpecificText = document.getElementById('city-specific-text');
+                citySpecificText.textContent = `City of ${cityName} - Fleet Management Benchmarking Study`;
+                
+                // Update city reference in instructions
+                const cityReference = document.getElementById('city-reference');
+                cityReference.textContent = `, including the City of ${cityName}`;
+            }
+
+            // Customize fiscal year reference and pre-fill if provided
+            if (fiscalYear) {
+                const fyReference = document.getElementById('fy-reference');
+                fyReference.textContent = ` (fiscal year ending ${fiscalYear})`;
+                
+                // Pre-fill the fiscal year input
+                const fiscalYearInput = document.getElementById('fiscal-year-input');
+                fiscalYearInput.value = fiscalYear;
+                fiscalYearInput.placeholder = fiscalYear;
+            }
+
+            // Add city name to stored responses for tracking
+            if (cityName) {
+                window.currentCity = cityName;
+            }
+
+            // Set up auto-calculation for totals
+            setupAutoCalculation();
+        }
+
+        // Auto-calculation setup
+        function setupAutoCalculation() {
+            // FTE calculation
+            const fteInputs = document.querySelectorAll('.fte-input');
+            const totalFte = document.getElementById('total_fte');
+            
+            fteInputs.forEach(input => {
+                input.addEventListener('input', calculateFteTotal);
+            });
+
+            // Vehicle calculation
+            const vehicleInputs = document.querySelectorAll('.vehicle-input');
+            const totalVehicles = document.getElementById('total_vehicles');
+            
+            vehicleInputs.forEach(input => {
+                input.addEventListener('input', calculateVehicleTotal);
+            });
+        }
+
+        // Calculate FTE total
+        function calculateFteTotal() {
+            const fteInputs = document.querySelectorAll('.fte-input');
+            let total = 0;
+            
+            fteInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                total += value;
+            });
+            
+            document.getElementById('total_fte').value = total.toFixed(1);
+        }
+
+        // Calculate Vehicle total
+        function calculateVehicleTotal() {
+            const vehicleInputs = document.querySelectorAll('.vehicle-input');
+            let total = 0;
+            
+            vehicleInputs.forEach(input => {
+                const value = parseInt(input.value) || 0;
+                total += value;
+            });
+            
+            document.getElementById('total_vehicles').value = total;
+        }
+
+        // Handle form submission
+        document.getElementById('fleet-survey').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const response = {
+                timestamp: new Date().toISOString(),
+                city: window.currentCity || 'Unknown',
+                fiscal_year_end: formData.get('fiscal_year_end'),
+                total_budget: formData.get('total_budget'),
+                auto_technicians_fte: formData.get('auto_technicians_fte'),
+                admin_fte: formData.get('admin_fte'),
+                heavy_mechanics_fte: formData.get('heavy_mechanics_fte'),
+                other_mechanics_fte: formData.get('other_mechanics_fte'),
+                other_classifications_fte: formData.get('other_classifications_fte'),
+                total_fte: formData.get('total_fte'),
+                heavy_trucks: formData.get('heavy_trucks'),
+                auto_light: formData.get('auto_light'),
+                other_vehicles: formData.get('other_vehicles'),
+                total_vehicles: formData.get('total_vehicles')
+            };
+
+            // Add response to array
+            surveyResponses.push(response);
+            
+            // Show success message
+            document.getElementById('success-msg').style.display = 'block';
+            document.getElementById('error-msg').style.display = 'none';
+            
+            // Update response count
+            updateResponseCount();
+            
+            // Reset form
+            this.reset();
+            
+            // Scroll to top to show success message
+            window.scrollTo(0, 0);
+        });
+
+        // Update response count display
+        function updateResponseCount() {
+            const count = surveyResponses.length;
+            document.getElementById('response-count').textContent = `${count} response${count !== 1 ? 's' : ''} collected`;
+        }
+
+        // Download responses as CSV
+        function downloadCSV() {
+            if (surveyResponses.length === 0) {
+                alert('No responses to download yet.');
+                return;
+            }
+
+            const headers = [
+                'Timestamp',
+                'City',
+                'Fiscal Year End',
+                'Total Budget',
+                'Auto Technicians FTE',
+                'Admin FTE',
+                'Heavy Equipment Mechanics FTE',
+                'Other Mechanics FTE',
+                'Other Classifications FTE',
+                'Total FTE',
+                'Heavy Trucks',
+                'Auto Light',
+                'Other Vehicles',
+                'Total Vehicles'
+            ];
+
+            let csvContent = headers.join(',') + '\n';
+            
+            surveyResponses.forEach(response => {
+                const row = [
+                    response.timestamp,
+                    `"${response.city}"`,
+                    `"${response.fiscal_year_end}"`,
+                    `"${response.total_budget}"`,
+                    response.auto_technicians_fte,
+                    response.admin_fte,
+                    response.heavy_mechanics_fte,
+                    response.other_mechanics_fte,
+                    response.other_classifications_fte,
+                    response.total_fte,
+                    response.heavy_trucks,
+                    response.auto_light,
+                    response.other_vehicles,
+                    response.total_vehicles
+                ];
+                csvContent += row.join(',') + '\n';
+            });
+
+            downloadFile(csvContent, 'fleet_management_survey_responses.csv', 'text/csv');
+        }
+
+        // Download responses as JSON
+        function downloadJSON() {
+            if (surveyResponses.length === 0) {
+                alert('No responses to download yet.');
+                return;
+            }
+
+            const jsonContent = JSON.stringify(surveyResponses, null, 2);
+            downloadFile(jsonContent, 'fleet_management_survey_responses.json', 'application/json');
+        }
+
+        // Helper function to download files
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Clear all responses
+        function clearResponses() {
+            if (confirm('Are you sure you want to clear all collected responses? This cannot be undone.')) {
+                surveyResponses = [];
+                updateResponseCount();
+                alert('All responses have been cleared.');
+            }
+        }
+
+        // Admin access functions
+        function showAdminAccess() {
+            document.getElementById('admin-modal').style.display = 'block';
+            document.getElementById('admin-password').focus();
+        }
+
+        function hideAdminAccess() {
+            document.getElementById('admin-modal').style.display = 'none';
+            document.getElementById('admin-password').value = '';
+        }
+
+        function checkAdminAccess() {
+            const password = document.getElementById('admin-password').value;
+            // Change this password to whatever you prefer
+            if (password === 'admin123') {
+                document.getElementById('admin-section').style.display = 'block';
+                hideAdminAccess();
+                // Scroll to admin section
+                document.getElementById('admin-section').scrollIntoView({behavior: 'smooth'});
+            } else {
+                alert('Incorrect access code');
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-password').focus();
+            }
+        }
+
+        // Allow Enter key to submit admin password
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('admin-modal').style.display === 'block') {
+                checkAdminAccess();
+            }
+        });
+
+        // Initialize form customization and response count on page load
+        initializeForm();
+        updateResponseCount();
+    </script>
+</body>
+</html>
