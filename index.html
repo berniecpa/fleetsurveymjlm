@@ -232,10 +232,6 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Auto Technicians</td>
-                                    <td><input type="number" name="auto_technicians_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
-                                </tr>
-                                <tr>
                                     <td>Administration (Including Director)</td>
                                     <td><input type="number" name="admin_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
                                 </tr>
@@ -246,6 +242,10 @@
                                 <tr>
                                     <td>Mechanics (all other mechanics)</td>
                                     <td><input type="number" name="other_mechanics_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
+                                </tr>
+                                <tr>
+                                    <td>Auto Technicians</td>
+                                    <td><input type="number" name="auto_technicians_fte" class="grid-input fte-input" min="0" step="0.1" required></td>
                                 </tr>
                                 <tr>
                                     <td>All other classifications</td>
@@ -272,16 +272,20 @@
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td>Sedan</td>
+                                    <td><input type="number" name="sedan" class="grid-input vehicle-input" min="0" required></td>
+                                </tr>
+                                <tr>
+                                    <td>Light Trucks</td>
+                                    <td><input type="number" name="light_trucks" class="grid-input vehicle-input" min="0" required></td>
+                                </tr>
+                                <tr>
+                                    <td>SUV/Vans</td>
+                                    <td><input type="number" name="suv_vans" class="grid-input vehicle-input" min="0" required></td>
+                                </tr>
+                                <tr>
                                     <td>Heavy Trucks (i.e., landfill, sanitization, dump trucks, fire trucks, etc.)</td>
                                     <td><input type="number" name="heavy_trucks" class="grid-input vehicle-input" min="0" required></td>
-                                </tr>
-                                <tr>
-                                    <td>Auto Light (i.e., light trucks, sedans, vans, etc.)</td>
-                                    <td><input type="number" name="auto_light" class="grid-input vehicle-input" min="0" required></td>
-                                </tr>
-                                <tr>
-                                    <td>All other vehicles and motorized equipment</td>
-                                    <td><input type="number" name="other_vehicles" class="grid-input vehicle-input" min="0" required></td>
                                 </tr>
                                 <tr style="background-color: #f8f9fa; font-weight: 500;">
                                     <td><strong>Total Vehicle Inventory</strong></td>
@@ -290,6 +294,25 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">4. Do you have a formal, written vehicle replacement policy and program? <span class="required">*</span></div>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="replacement_policy_yes" name="replacement_policy" value="Yes" required onchange="toggleReplacementCost()">
+                            <label for="replacement_policy_yes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="replacement_policy_no" name="replacement_policy" value="No" required onchange="toggleReplacementCost()">
+                            <label for="replacement_policy_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-block" id="replacement_cost_question" style="display: none;">
+                    <div class="question-title">5. What are the associated costs for vehicle replacement? <span class="required">*</span></div>
+                    <input type="text" id="replacement_costs" name="replacement_costs" placeholder="Enter amount">
                 </div>
 
                 <button type="submit" class="submit-btn">Submit Response</button>
@@ -381,6 +404,22 @@
             });
         }
 
+        // Toggle replacement cost question visibility
+        function toggleReplacementCost() {
+            const replacementPolicyYes = document.getElementById('replacement_policy_yes');
+            const replacementCostQuestion = document.getElementById('replacement_cost_question');
+            const replacementCostsInput = document.getElementById('replacement_costs');
+            
+            if (replacementPolicyYes.checked) {
+                replacementCostQuestion.style.display = 'block';
+                replacementCostsInput.setAttribute('required', '');
+            } else {
+                replacementCostQuestion.style.display = 'none';
+                replacementCostsInput.removeAttribute('required');
+                replacementCostsInput.value = '';
+            }
+        }
+
         // Calculate FTE total
         function calculateFteTotal() {
             const fteInputs = document.querySelectorAll('.fte-input');
@@ -417,16 +456,19 @@
                 city: window.currentCity || 'Unknown',
                 fiscal_year_end: formData.get('fiscal_year_end'),
                 total_budget: formData.get('total_budget'),
-                auto_technicians_fte: formData.get('auto_technicians_fte'),
                 admin_fte: formData.get('admin_fte'),
                 heavy_mechanics_fte: formData.get('heavy_mechanics_fte'),
                 other_mechanics_fte: formData.get('other_mechanics_fte'),
+                auto_technicians_fte: formData.get('auto_technicians_fte'),
                 other_classifications_fte: formData.get('other_classifications_fte'),
                 total_fte: formData.get('total_fte'),
+                sedan: formData.get('sedan'),
+                light_trucks: formData.get('light_trucks'),
+                suv_vans: formData.get('suv_vans'),
                 heavy_trucks: formData.get('heavy_trucks'),
-                auto_light: formData.get('auto_light'),
-                other_vehicles: formData.get('other_vehicles'),
-                total_vehicles: formData.get('total_vehicles')
+                total_vehicles: formData.get('total_vehicles'),
+                replacement_policy: formData.get('replacement_policy'),
+                replacement_costs: formData.get('replacement_costs') || 'N/A'
             };
 
             // Add response to array
@@ -441,6 +483,9 @@
             
             // Reset form
             this.reset();
+            
+            // Hide replacement cost question on reset
+            document.getElementById('replacement_cost_question').style.display = 'none';
             
             // Scroll to top to show success message
             window.scrollTo(0, 0);
@@ -464,16 +509,19 @@
                 'City',
                 'Fiscal Year End',
                 'Total Budget',
-                'Auto Technicians FTE',
                 'Admin FTE',
                 'Heavy Equipment Mechanics FTE',
                 'Other Mechanics FTE',
+                'Auto Technicians FTE',
                 'Other Classifications FTE',
                 'Total FTE',
+                'Sedan',
+                'Light Trucks',
+                'SUV/Vans',
                 'Heavy Trucks',
-                'Auto Light',
-                'Other Vehicles',
-                'Total Vehicles'
+                'Total Vehicles',
+                'Replacement Policy',
+                'Replacement Costs'
             ];
 
             let csvContent = headers.join(',') + '\n';
@@ -484,16 +532,19 @@
                     `"${response.city}"`,
                     `"${response.fiscal_year_end}"`,
                     `"${response.total_budget}"`,
-                    response.auto_technicians_fte,
                     response.admin_fte,
                     response.heavy_mechanics_fte,
                     response.other_mechanics_fte,
+                    response.auto_technicians_fte,
                     response.other_classifications_fte,
                     response.total_fte,
+                    response.sedan,
+                    response.light_trucks,
+                    response.suv_vans,
                     response.heavy_trucks,
-                    response.auto_light,
-                    response.other_vehicles,
-                    response.total_vehicles
+                    response.total_vehicles,
+                    response.replacement_policy,
+                    `"${response.replacement_costs}"`
                 ];
                 csvContent += row.join(',') + '\n';
             });
