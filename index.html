@@ -296,25 +296,6 @@
                     </div>
                 </div>
 
-                <div class="question-block">
-                    <div class="question-title">4. Do you have a formal, written vehicle replacement policy and program? <span class="required">*</span></div>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="replacement_policy_yes" name="replacement_policy" value="Yes" required onchange="toggleReplacementCost()">
-                            <label for="replacement_policy_yes">Yes</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="replacement_policy_no" name="replacement_policy" value="No" required onchange="toggleReplacementCost()">
-                            <label for="replacement_policy_no">No</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="question-block" id="replacement_cost_question" style="display: none;">
-                    <div class="question-title">5. What are the associated costs for vehicle replacement? <span class="required">*</span></div>
-                    <input type="text" id="replacement_costs" name="replacement_costs" placeholder="Enter amount">
-                </div>
-
                 <button type="submit" class="submit-btn">Submit Response</button>
             </form>
         </div>
@@ -404,22 +385,6 @@
             });
         }
 
-        // Toggle replacement cost question visibility
-        function toggleReplacementCost() {
-            const replacementPolicyYes = document.getElementById('replacement_policy_yes');
-            const replacementCostQuestion = document.getElementById('replacement_cost_question');
-            const replacementCostsInput = document.getElementById('replacement_costs');
-            
-            if (replacementPolicyYes.checked) {
-                replacementCostQuestion.style.display = 'block';
-                replacementCostsInput.setAttribute('required', '');
-            } else {
-                replacementCostQuestion.style.display = 'none';
-                replacementCostsInput.removeAttribute('required');
-                replacementCostsInput.value = '';
-            }
-        }
-
         // Calculate FTE total
         function calculateFteTotal() {
             const fteInputs = document.querySelectorAll('.fte-input');
@@ -466,9 +431,7 @@
                 light_trucks: formData.get('light_trucks'),
                 suv_vans: formData.get('suv_vans'),
                 heavy_trucks: formData.get('heavy_trucks'),
-                total_vehicles: formData.get('total_vehicles'),
-                replacement_policy: formData.get('replacement_policy'),
-                replacement_costs: formData.get('replacement_costs') || 'N/A'
+                total_vehicles: formData.get('total_vehicles')
             };
 
             // Add response to array
@@ -483,9 +446,6 @@
             
             // Reset form
             this.reset();
-            
-            // Hide replacement cost question on reset
-            document.getElementById('replacement_cost_question').style.display = 'none';
             
             // Scroll to top to show success message
             window.scrollTo(0, 0);
@@ -519,9 +479,7 @@
                 'Light Trucks',
                 'SUV/Vans',
                 'Heavy Trucks',
-                'Total Vehicles',
-                'Replacement Policy',
-                'Replacement Costs'
+                'Total Vehicles'
             ];
 
             let csvContent = headers.join(',') + '\n';
@@ -542,9 +500,7 @@
                     response.light_trucks,
                     response.suv_vans,
                     response.heavy_trucks,
-                    response.total_vehicles,
-                    response.replacement_policy,
-                    `"${response.replacement_costs}"`
+                    response.total_vehicles
                 ];
                 csvContent += row.join(',') + '\n';
             });
